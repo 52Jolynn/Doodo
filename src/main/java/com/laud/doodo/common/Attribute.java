@@ -6,6 +6,7 @@ import java.util.Map;
 import java.util.Set;
 
 import com.laud.doodo.exception.ExceptionFactory;
+import com.laud.doodo.spring.util.SpringReflectionUtils;
 
 /**
  * @author: Laud
@@ -18,22 +19,27 @@ public abstract class Attribute implements Mappable<Attribute, String, String>,
 	public Attribute() {
 	}
 
-	public Map<String, String> map(ValueVisitor<String> visitor) {
-		Map<String, String> map = new HashMap<String, String>();
-		Field[] fields = getClass().getDeclaredFields();
-		for (Field field : fields) {
-			field.setAccessible(true);
-			String value = "";
-			try {
-				Object obj = field.get(this);
-				value = visitor.accept(obj);
-			} catch (IllegalArgumentException e) {
-				throw ExceptionFactory.wrapException("argument error!", e);
-			} catch (IllegalAccessException e) {
-				throw ExceptionFactory.wrapException("permission error!", e);
-			}
-			map.put(field.getName(), value);
+	public Map<String, String> map(final ValueVisitor<String> visitor) {
+		final Map<String, String> map = new HashMap<String, String>();
+		final Attribute thiz = this;
+		Class<?> clazz = getClass();
+		try {
+			SpringReflectionUtils.doWithFields(clazz,
+					new SpringReflectionUtils.FieldCallback() {
+						public void doWith(Field field)
+								throws IllegalArgumentException,
+								IllegalAccessException {
+							field.setAccessible(true);
+							String value = "";
+							Object obj = field.get(thiz);
+							value = visitor.accept(obj);
+							map.put(field.getName(), value);
+						}
+					}, SpringReflectionUtils.COPYABLE_FIELDS);
+		} catch (IllegalArgumentException e) {
+			throw ExceptionFactory.wrapException("argument exception!", e);
 		}
+
 		return map;
 	}
 
@@ -43,15 +49,14 @@ public abstract class Attribute implements Mappable<Attribute, String, String>,
 		for (String key : keys) {
 			String value = map.get(key);
 			try {
-				Field field = clazz.getDeclaredField(key);
+				Field field = SpringReflectionUtils.findField(clazz, key);
 				field.setAccessible(true);
 				field.set(this, visitor.target(field.getType(), value));
-			} catch (NoSuchFieldException e) {
-				throw ExceptionFactory.wrapException("no such field!", e);
 			} catch (IllegalArgumentException e) {
-				throw ExceptionFactory.wrapException("argument error!", e);
+				throw ExceptionFactory.wrapException("argument exception!", e);
 			} catch (IllegalAccessException e) {
-				throw ExceptionFactory.wrapException("permission error!", e);
+				throw ExceptionFactory
+						.wrapException("permission exception!", e);
 			}
 		}
 		return this;
