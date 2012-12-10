@@ -10,7 +10,7 @@ import net.sf.json.JsonConfig;
  * @author: Laud
  * @email: htd0324@gmail.com
  * @date: 2012-9-24
- * @copyright: www.armisi.com.cn
+ * @copyright: www.dreamoriole.com
  */
 public class JSONUtils {
 	/**

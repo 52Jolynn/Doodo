@@ -19,7 +19,7 @@ import com.jacob.com.Variant;
  * @author: Laud
  * @email: htd0324@gmail.com
  * @date: 2012-9-23
- * @copyright: www.armisi.com.cn
+ * @copyright: www.dreamoriole.com
  */
 public class OfficeToPdfUtils {
 	private final static Logger log = Logger.getLogger(OfficeToPdfUtils.class);

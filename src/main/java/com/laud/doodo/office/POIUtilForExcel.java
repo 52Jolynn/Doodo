@@ -20,7 +20,7 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
  * @author: Laud
  * @email: htd0324@gmail.com
  * @date: 2012-9-23
- * @copyright: www.armisi.com.cn
+ * @copyright: www.dreamoriole.com
  */
 public abstract class POIUtilForExcel {
 	public static final int EXCEL2003 = 0;

@@ -10,7 +10,7 @@ import com.laud.doodo.exception.ExceptionFactory;
  * @author: Laud
  * @email: htd0324@gmail.com
  * @date: 2012-9-24 下午6:28:29
- * @copyright: www.armisi.com.cn
+ * @copyright: www.dreamoriole.com
  */
 public class ReflectionUtils {
 	/**

@@ -6,7 +6,7 @@ import junit.framework.TestCase;
  * @author: Laud
  * @email: htd0324@gmail.com
  * @date: 2012-9-24
- * @copyright: www.armisi.com.cn
+ * @copyright: www.dreamoriole.com
  */
 public class StringTest extends TestCase {
 	public void testInitial2LowerCase() {

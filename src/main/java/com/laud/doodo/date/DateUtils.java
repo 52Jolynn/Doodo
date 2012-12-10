@@ -10,7 +10,7 @@ import java.util.TimeZone;
  * @author: Laud
  * @email: htd0324@gmail.com
  * @date: 2012-9-11 下午3:28:34
- * @copyright: www.armisi.com.cn
+ * @copyright: www.dreamoriole.com
  */
 public class DateUtils {
 	// 默认时间格式

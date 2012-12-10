@@ -4,7 +4,7 @@ package com.laud.doodo.common;
  * @author: Laud
  * @email: htd0324@gmail.com
  * @date: 2012-12-8 上午10:20:46
- * @copyright: www.armisi.com.cn
+ * @copyright: www.dreamoriole.com
  */
 public interface Coder {
 	/**

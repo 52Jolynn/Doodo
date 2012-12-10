@@ -9,7 +9,7 @@ import junit.framework.TestCase;
  * @author: Laud
  * @email: htd0324@gmail.com
  * @date: 2012-9-22 下午2:17:16
- * @copyright: www.armisi.com.cn
+ * @copyright: www.dreamoriole.com
  */
 public class DateTest extends TestCase {
 	private Date testDate = DateUtils.string2Date("2012-09-23 10:31:02",

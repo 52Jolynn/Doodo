@@ -12,7 +12,7 @@ import java.util.Map;
  * @author: Laud
  * @email: htd0324@gmail.com
  * @date: 2012-11-23 上午9:43:42
- * @copyright: www.armisi.com.cn
+ * @copyright: www.dreamoriole.com
  */
 public interface Mappable<T, K, V> {
 	/**

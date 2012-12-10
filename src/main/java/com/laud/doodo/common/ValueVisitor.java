@@ -6,7 +6,7 @@ package com.laud.doodo.common;
  * @author: Laud
  * @email: htd0324@gmail.com
  * @date: 2012-11-23 上午10:11:25
- * @copyright: www.armisi.com.cn
+ * @copyright: www.dreamoriole.com
  */
 public interface ValueVisitor<T> {
 	/**

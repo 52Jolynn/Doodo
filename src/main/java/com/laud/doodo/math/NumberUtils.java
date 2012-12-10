@@ -4,7 +4,7 @@ package com.laud.doodo.math;
  * @author: Laud
  * @email: htd0324@gmail.com
  * @date: 2012-10-12
- * @copyright: www.armisi.com.cn
+ * @copyright: www.dreamoriole.com
  */
 public class NumberUtils {
 	/**

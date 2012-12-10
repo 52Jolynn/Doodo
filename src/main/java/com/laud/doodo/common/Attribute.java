@@ -12,7 +12,7 @@ import com.laud.doodo.spring.util.SpringReflectionUtils;
  * @author: Laud
  * @email: htd0324@gmail.com
  * @date: 2012-11-23 上午10:55:34
- * @copyright: www.armisi.com.cn
+ * @copyright: www.dreamoriole.com
  */
 public abstract class Attribute implements Mappable<Attribute, String, String>,
 		ValueVisitor<String> {

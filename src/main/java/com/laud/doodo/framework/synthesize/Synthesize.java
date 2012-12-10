@@ -11,7 +11,7 @@ import java.lang.annotation.Target;
  * @author: Laud
  * @email: htd0324@gmail.com
  * @date: 2012-11-8
- * @copyright: www.armisi.com.cn
+ * @copyright: www.dreamoriole.com
  */
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)

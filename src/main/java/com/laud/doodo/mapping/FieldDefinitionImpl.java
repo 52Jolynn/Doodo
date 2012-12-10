@@ -16,7 +16,7 @@ import com.laud.doodo.spring.util.SpringReflectionUtils;
  * @author: Laud
  * @email: htd0324@gmail.com
  * @date: 2012-9-22 下午1:42:11
- * @copyright: www.armisi.com.cn
+ * @copyright: www.dreamoriole.com
  */
 public abstract class FieldDefinitionImpl implements Coder {
 	/**
