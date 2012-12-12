@@ -1,10 +1,3 @@
-/**  
- * @title BallMathMatrix.java  
- * @package com.badlogicgames.common  
- * @description   
- * @author chenzf             
- * @Date 2011-12-2
- */
 package com.laud.doodo.math;
 
 /**
