@@ -8,20 +8,10 @@ package com.laud.doodo.common;
  * @date: 2012-11-23 上午10:11:25
  * @copyright: www.dreamoriole.com
  */
-public interface ValueVisitor<T> {
-	/**
-	 * 将指定值转成指定类型的值
-	 * 
-	 * @param value
-	 *            值
-	 * @param param
-	 *            参数
-	 * @return 返回值
-	 */
-	public T accept(Object value, Object param);
+public interface ValueVisitor {
 
 	/**
-	 * 将值转成目标对象类型的值
+	 * 将传入值转成targetClass指定的对象类型值
 	 * 
 	 * @param targetClass
 	 *            目标对象类型

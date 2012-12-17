@@ -19,51 +19,78 @@ import com.laud.doodo.spring.util.SpringReflectionUtils;
  * @copyright: www.dreamoriole.com
  */
 public abstract class FieldDefinitionImpl implements Coder {
+	private static Map<Class<?>, ValueVisitor> visitors = null;
+
+	/**
+	 * 注册值处理器
+	 * 
+	 * @param targetClass
+	 *            目标类型
+	 * @param visitor
+	 *            值处理器
+	 */
+	public void registerValueVisitor(Class<?> targetClass, ValueVisitor visitor) {
+		if (visitors == null) {
+			visitors = new HashMap<Class<?>, ValueVisitor>(4);
+		}
+		visitors.put(targetClass, visitor);
+	}
+
+	/**
+	 * 移除值处理器
+	 * 
+	 * @param targetClass
+	 */
+	public void removeValueVisitor(Class<?> targetClass) {
+		if (visitors != null) {
+			visitors.remove(targetClass);
+		}
+	}
+
 	/**
 	 * 映射-值的集合
 	 * 
-	 * @param visitor
+	 * @param defaultVisitor
 	 *            值处理器
 	 * @return
 	 */
 	public Map<String, Object> valuesWithMappingNames(
-			ValueVisitor<Object> visitor) {
-		return values(0, visitor);
+			ValueVisitor defaultVisitor) {
+		return values(0, defaultVisitor);
 	}
 
 	/**
 	 * 属性-值的集合
 	 * 
-	 * @param visitor
+	 * @param defaultVisitor
 	 *            值处理器
 	 * @return
 	 */
 	public Map<String, Object> valuesWithPropertyNames(
-			ValueVisitor<Object> visitor) {
-		return values(1, visitor);
+			ValueVisitor defaultVisitor) {
+		return values(1, defaultVisitor);
 	}
 
 	/**
 	 * 列名-值的集合
 	 * 
-	 * @param visitor
+	 * @param defaultVisitor
 	 *            值处理器
 	 * @return
 	 */
-	public Map<String, Object> valuesWithColumnNames(
-			ValueVisitor<Object> visitor) {
-		return values(2, visitor);
+	public Map<String, Object> valuesWithColumnNames(ValueVisitor defaultVisitor) {
+		return values(2, defaultVisitor);
 	}
 
 	/**
 	 * 根据映射名-值集合设置对象值
 	 * 
 	 * @param map
-	 * @param visitor
-	 *            值处理器
+	 * @param defaultVisitor
+	 *            默认值处理器
 	 */
 	public void setValuesWithMappingNameMap(final Map<String, Object> map,
-			final ValueVisitor<Object> visitor) {
+			final ValueVisitor defaultVisitor) {
 		Class<?> clazz = getClass();
 		final FieldDefinitionImpl thiz = this;
 		try {
@@ -83,11 +110,18 @@ public abstract class FieldDefinitionImpl implements Coder {
 							if (map.containsKey(key)) {
 								field.setAccessible(true);
 								Object value = map.get(key);
-								if (visitor != null) {
-									value = visitor.accept(value, null);
-								}
-								if (def.escape()) {
-									value = encode(value);
+								Class<?> targetClass = field.getClass();
+								Map<String, Object> params = new HashMap<String, Object>(
+										1);
+								params.put("escape", def.escape());
+								if (visitors.containsKey(targetClass)) {
+									ValueVisitor visitor = visitors
+											.get(targetClass);
+									value = visitor.target(targetClass, value,
+											params);
+								} else if (defaultVisitor != null) {
+									value = defaultVisitor.target(
+											field.getClass(), value, params);
 								}
 								field.set(thiz, value);
 							}
@@ -102,12 +136,12 @@ public abstract class FieldDefinitionImpl implements Coder {
 	 * 
 	 * @param type
 	 *            0-映射名，1-属性名，2-列名
-	 * @param visitor
-	 *            值处理器
+	 * @param defaultVisitor
+	 *            默认值处理器
 	 * @return
 	 */
 	private Map<String, Object> values(final int type,
-			final ValueVisitor<Object> visitor) {
+			final ValueVisitor defaultVisitor) {
 		Class<?> clazz = getClass();
 		final FieldDefinitionImpl thiz = this;
 		final Map<String, Object> map = new HashMap<String, Object>();
@@ -136,11 +170,16 @@ public abstract class FieldDefinitionImpl implements Coder {
 						Object value = null;
 						field.setAccessible(true);
 						value = field.get(thiz);
-						if (visitor != null) {
-							value = visitor.target(field.getType(), value, null);
-						}
-						if (def.escape()) {
-							value = decode(value);
+						Class<?> targetClass = field.getType();
+						Map<String, Object> params = new HashMap<String, Object>(
+								1);
+						params.put("escape", def.escape());
+						if (visitors.containsKey(targetClass)) {
+							ValueVisitor visitor = visitors.get(targetClass);
+							value = visitor.target(targetClass, value, params);
+						} else if (defaultVisitor != null) {
+							value = defaultVisitor.target(targetClass, value,
+									params);
 						}
 						map.put(key, value);
 					}

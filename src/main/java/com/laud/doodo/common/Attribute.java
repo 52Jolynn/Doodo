@@ -15,11 +15,11 @@ import com.laud.doodo.spring.util.SpringReflectionUtils;
  * @copyright: www.dreamoriole.com
  */
 public abstract class Attribute implements Mappable<Attribute, String, String>,
-		ValueVisitor<String> {
+		ValueVisitor {
 	public Attribute() {
 	}
 
-	public Map<String, String> map(final ValueVisitor<String> visitor) {
+	public Map<String, String> map(final ValueVisitor visitor) {
 		final Map<String, String> map = new HashMap<String, String>();
 		final Attribute thiz = this;
 		Class<?> clazz = getClass();
@@ -30,9 +30,9 @@ public abstract class Attribute implements Mappable<Attribute, String, String>,
 								throws IllegalArgumentException,
 								IllegalAccessException {
 							field.setAccessible(true);
-							String value = "";
 							Object obj = field.get(thiz);
-							value = visitor.accept(obj, null);
+							String value = visitor.target(String.class, obj,
+									null).toString();
 							map.put(field.getName(), value);
 						}
 					}, SpringReflectionUtils.COPYABLE_FIELDS);
@@ -43,7 +43,7 @@ public abstract class Attribute implements Mappable<Attribute, String, String>,
 		return map;
 	}
 
-	public Attribute set(Map<String, String> map, ValueVisitor<String> visitor) {
+	public Attribute set(Map<String, String> map, ValueVisitor visitor) {
 		Set<String> keys = map.keySet();
 		Class<?> clazz = getClass();
 		for (String key : keys) {

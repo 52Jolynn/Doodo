@@ -22,7 +22,7 @@ public interface Mappable<T, K, V> {
 	 *            值处理器
 	 * @return
 	 */
-	public Map<K, V> map(ValueVisitor<V> visitor);
+	public Map<K, V> map(ValueVisitor visitor);
 
 	/**
 	 * 键值映射转实体对象
@@ -33,5 +33,5 @@ public interface Mappable<T, K, V> {
 	 *            值处理器
 	 * @return
 	 */
-	public T set(Map<K, V> map, ValueVisitor<V> visitor);
+	public T set(Map<K, V> map, ValueVisitor visitor);
 }
