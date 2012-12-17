@@ -32,7 +32,7 @@ public abstract class Attribute implements Mappable<Attribute, String, String>,
 							field.setAccessible(true);
 							String value = "";
 							Object obj = field.get(thiz);
-							value = visitor.accept(obj, null);
+							value = visitor.accept(obj);
 							map.put(field.getName(), value);
 						}
 					}, SpringReflectionUtils.COPYABLE_FIELDS);
@@ -51,7 +51,7 @@ public abstract class Attribute implements Mappable<Attribute, String, String>,
 			try {
 				Field field = SpringReflectionUtils.findField(clazz, key);
 				field.setAccessible(true);
-				field.set(this, visitor.target(field.getType(), value, null));
+				field.set(this, visitor.target(field.getType(), value));
 			} catch (IllegalArgumentException e) {
 				throw ExceptionFactory.wrapException("argument exception!", e);
 			} catch (IllegalAccessException e) {
