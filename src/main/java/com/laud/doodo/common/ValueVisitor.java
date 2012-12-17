@@ -14,9 +14,11 @@ public interface ValueVisitor<T> {
 	 * 
 	 * @param value
 	 *            值
+	 * @param param
+	 *            参数
 	 * @return 返回值
 	 */
-	public T accept(Object value);
+	public T accept(Object value, Object param);
 
 	/**
 	 * 将值转成目标对象类型的值
@@ -25,7 +27,9 @@ public interface ValueVisitor<T> {
 	 *            目标对象类型
 	 * @param value
 	 *            值
+	 * @param param
+	 *            参数
 	 * @return
 	 */
-	public Object target(Class<?> targetClass, Object value);
+	public Object target(Class<?> targetClass, Object value, Object param);
 }
