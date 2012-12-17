@@ -84,7 +84,7 @@ public abstract class FieldDefinitionImpl implements Coder {
 								field.setAccessible(true);
 								Object value = map.get(key);
 								if (visitor != null) {
-									value = visitor.accept(value);
+									value = visitor.accept(value, null);
 								}
 								if (def.escape()) {
 									value = encode(value);
@@ -137,7 +137,7 @@ public abstract class FieldDefinitionImpl implements Coder {
 						field.setAccessible(true);
 						value = field.get(thiz);
 						if (visitor != null) {
-							value = visitor.target(field.getType(), value);
+							value = visitor.target(field.getType(), value, null);
 						}
 						if (def.escape()) {
 							value = decode(value);
