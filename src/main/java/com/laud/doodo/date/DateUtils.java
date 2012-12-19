@@ -128,4 +128,52 @@ public class DateUtils {
 
 		return Math.abs(d1 - d2) / (60 * 60 * 24 * 1000);
 	}
+
+	/**
+	 * 取得一天的开始时间
+	 * 
+	 * @param date
+	 * @return
+	 */
+	public Date getStartOfTheDay(Date date) {
+		String value = date2String(date, "yyyy-MM-dd 00:00:00");
+		return string2Date(value);
+	}
+
+	/**
+	 * 取得一天的结束时间
+	 * 
+	 * @param date
+	 * @return
+	 */
+	public Date getEndOfTheDay(Date date) {
+		String value = date2String(date, "yyyy-MM-dd 23:59:59");
+		return string2Date(value);
+	}
+
+	/**
+	 * 取得指定月份的第一天
+	 * 
+	 * @param date
+	 * @return
+	 */
+	public static Date getFirstDayOfTheMonth(Date date) {
+		String value = date2String(date, "yyyy-MM-01 00:00:00");
+		return string2Date(value);
+	}
+
+	/**
+	 * 取得指定月份的最后一天
+	 * 
+	 * @param date
+	 * @return
+	 */
+	public static Date getLastDayOfTheMonth(Date date) {
+		Calendar calendar = Calendar.getInstance();
+		calendar.setTime(date);
+		int lastDay = calendar.getActualMaximum(Calendar.DAY_OF_MONTH);
+		calendar.set(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH),
+				lastDay, 0, 0, 0);
+		return calendar.getTime();
+	}
 }

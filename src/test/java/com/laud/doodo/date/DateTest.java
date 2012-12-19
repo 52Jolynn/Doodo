@@ -54,4 +54,16 @@ public class DateTest extends TestCase {
 		calendar.setTime(date);
 		assertEquals(2013, calendar.get(Calendar.YEAR));
 	}
+
+	public void testFirstDay() {
+		Date date = new Date();
+		Date r = DateUtils.getFirstDayOfTheMonth(date);
+		System.out.println(r);
+	}
+
+	public void testLastDay() {
+		Date date = new Date();
+		Date r = DateUtils.getLastDayOfTheMonth(date);
+		System.out.println(r);
+	}
 }
