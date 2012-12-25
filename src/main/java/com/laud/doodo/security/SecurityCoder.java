@@ -44,7 +44,19 @@ public final class SecurityCoder {
 	 * @return
 	 */
 	public static byte[] base64Decoder(String data) {
-		return Base64.decodeBase64(data);
+		return base64Decoder(data, false);
+	}
+
+	/**
+	 * base64解码
+	 * 
+	 * @param data
+	 * @param urlSafe
+	 * @return
+	 */
+	public static byte[] base64Decoder(String data, boolean urlSafe) {
+		Base64 base64 = new Base64(urlSafe);
+		return base64.decode(data);
 	}
 
 	/**
@@ -54,7 +66,19 @@ public final class SecurityCoder {
 	 * @return
 	 */
 	public static String base64Encoder(byte[] data) {
-		return Base64.encodeBase64String(data);
+		return base64Encoder(data, false);
+	}
+
+	/**
+	 * base64编码
+	 * 
+	 * @param data
+	 * @param urlSafe
+	 * @return
+	 */
+	public static String base64Encoder(byte[] data, boolean urlSafe) {
+		Base64 base64 = new Base64(urlSafe);
+		return base64.encodeToString(data);
 	}
 
 	/**
