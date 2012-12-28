@@ -1,5 +1,7 @@
 package com.laud.doodo.string;
 
+import java.util.regex.Pattern;
+
 /**
  * @author: Laud
  * @email: htd0324@gmail.com
@@ -35,5 +37,33 @@ public class StringUtils {
 			return value.replaceFirst(firstCharacter,
 					firstCharacter.toLowerCase());
 		}
+	}
+
+	/**
+	 * 检查Email是否合法
+	 * 
+	 * @param email
+	 * @return
+	 */
+	public static boolean checkEmail(String email) {
+		String regex = "([a-zA-Z0-9 \\-\\.]+)@((\\[[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.)|(([a-zA-Z0-9\\-]+\\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})";
+		if (Pattern.matches(regex, email)) {
+			return true;
+		}
+		return false;
+	}
+
+	/**
+	 * 检查手机号码是否合法，中国大陆
+	 * 
+	 * @param mobile
+	 * @return
+	 */
+	public static boolean checkMobile(String mobile) {
+		String regex = "^1[358][0-9]\\d{8}";
+		if (Pattern.matches(regex, mobile)) {
+			return true;
+		}
+		return false;
 	}
 }
