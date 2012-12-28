@@ -43,6 +43,7 @@ public class StringUtils {
 	 * 检查Email是否合法
 	 * 
 	 * @param email
+	 *            电子邮箱
 	 * @return
 	 */
 	public static boolean checkEmail(String email) {
@@ -57,6 +58,7 @@ public class StringUtils {
 	 * 检查手机号码是否合法，中国大陆
 	 * 
 	 * @param mobile
+	 *            手机号码
 	 * @return
 	 */
 	public static boolean checkMobile(String mobile) {
