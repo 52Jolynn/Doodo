@@ -36,4 +36,24 @@ public class StringTest extends TestCase {
 		assertEquals(value,
 				StringUtils.changeFirstCharacterCapitalized(value, true));
 	}
+
+	public void testCheckMobile() {
+		String mobile = "13828452853";
+		assertTrue(StringUtils.checkMobile(mobile));
+		assertTrue(StringUtils.checkMobile("15845656658"));
+		assertTrue(StringUtils.checkMobile("18845656658"));
+		assertFalse(StringUtils.checkMobile("123"));
+		assertFalse(StringUtils.checkMobile("123333"));
+		assertFalse(StringUtils.checkMobile("123333333331"));
+		assertFalse(StringUtils.checkMobile("1233333333312"));
+		assertFalse(StringUtils.checkMobile(""));
+		assertFalse(StringUtils.checkMobile("1382845285322"));
+		assertFalse(StringUtils.checkMobile("1582845285322"));
+		assertFalse(StringUtils.checkMobile("1982845285322"));
+		assertFalse(StringUtils.checkMobile("11828452853"));
+		assertFalse(StringUtils.checkMobile("12828452853"));
+		assertFalse(StringUtils.checkMobile("16828452853"));
+		assertFalse(StringUtils.checkMobile("17828452853"));
+		assertFalse(StringUtils.checkMobile("19828452853"));
+	}
 }
