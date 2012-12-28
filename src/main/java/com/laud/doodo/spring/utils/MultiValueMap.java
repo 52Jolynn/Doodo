@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.laud.doodo.spring.util;
+package com.laud.doodo.spring.utils;
 
 import java.util.List;
 import java.util.Map;

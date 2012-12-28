@@ -14,7 +14,7 @@
  * the License.
  */
 
-package com.laud.doodo.spring.util;
+package com.laud.doodo.spring.utils;
 
 /**
  * Assertion utility class that assists in validating arguments. Useful for
