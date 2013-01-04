@@ -4,8 +4,6 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.util.Arrays;
 
-import com.laud.doodo.exception.ExceptionFactory;
-
 /**
  * @author: Laud
  * @email: htd0324@gmail.com
@@ -14,27 +12,32 @@ import com.laud.doodo.exception.ExceptionFactory;
  */
 public class ReflectionUtils {
 	/**
-	 * 
+	 * @param clazz
+	 *            对象类型
 	 * @param name
 	 *            方法名称
 	 * @param args
 	 *            参数列表
-	 * @return
+	 * @return 若产生异常，则返回null
 	 */
 	public static Method findMethod(Class<?> clazz, String name, Object... args) {
-		try {
-			if (args != null && args.length > 0) {
-				int size = args.length;
-				Class<?>[] argsClazz = new Class<?>[size];
-				for (int i = 0; i < size; i++) {
-					argsClazz[i] = args[i].getClass();
-				}
-				return clazz.getMethod(name, argsClazz);
-			} else {
-				return clazz.getMethod(name, new Class<?>[0]);
+		if (args != null && args.length > 0) {
+			int size = args.length;
+			Class<?>[] argsClazz = new Class<?>[size];
+			for (int i = 0; i < size; i++) {
+				argsClazz[i] = args[i].getClass();
 			}
-		} catch (Exception e) {
-			throw ExceptionFactory.wrapException("没有找到指定方法!", e);
+			try {
+				return clazz.getMethod(name, argsClazz);
+			} catch (NoSuchMethodException e) {
+				return null;
+			}
+		} else {
+			try {
+				return clazz.getMethod(name, new Class<?>[0]);
+			} catch (NoSuchMethodException e) {
+				return null;
+			}
 		}
 	}
 
@@ -47,7 +50,7 @@ public class ReflectionUtils {
 	 *            构造函数参数列表
 	 * @param constructParameterType
 	 *            构造函数参数类型
-	 * @return
+	 * @return 若产生异常，则返回null
 	 */
 	public static Object newInstance(Class<?> cl, Object[] args,
 			Class<?>... constructParameterType) {
@@ -57,8 +60,7 @@ public class ReflectionUtils {
 					.getConstructor(constructParameterType);
 			obj = constructor.newInstance(args);
 		} catch (Exception e) {
-			throw ExceptionFactory.wrapException("创建" + cl.getName() + "实例失败!",
-					e);
+			return null;
 		}
 		return obj;
 	}
