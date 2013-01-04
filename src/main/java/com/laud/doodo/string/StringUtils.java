@@ -40,6 +40,16 @@ public class StringUtils {
 	}
 
 	/**
+	 * 判断字符串是否为null或空字符串
+	 * 
+	 * @param value
+	 * @return
+	 */
+	public boolean isNullOrEmpty(String value) {
+		return value == null || value.length() == 0;
+	}
+
+	/**
 	 * 检查Email是否合法
 	 * 
 	 * @param email
