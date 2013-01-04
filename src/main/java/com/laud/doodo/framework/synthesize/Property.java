@@ -6,7 +6,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * 只读属性
+ * 需要生成get/set方法的域
  * 
  * @author: Laud
  * @email: htd0324@gmail.com
@@ -15,5 +15,18 @@ import java.lang.annotation.Target;
  */
 @Target(ElementType.FIELD)
 @Retention(RetentionPolicy.RUNTIME)
-public @interface ReadOnly {
+public @interface Property {
+	/**
+	 * 要生成get/set方法的名称
+	 * 
+	 * @return
+	 */
+	String name();
+
+	/**
+	 * 是否只读
+	 * 
+	 * @return
+	 */
+	boolean readOnly() default false;
 }
