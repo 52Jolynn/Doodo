@@ -55,6 +55,7 @@ public abstract class ColumnValidator implements Validator {
 						displayName = bundle.getString(resourceKey);
 					}
 					Object object = null;
+					field.setAccessible(true);
 					try {
 						object = field.get(this);
 					} catch (IllegalArgumentException e) {
