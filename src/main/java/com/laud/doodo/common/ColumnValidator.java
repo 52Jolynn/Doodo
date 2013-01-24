@@ -2,6 +2,7 @@ package com.laud.doodo.common;
 
 import java.lang.reflect.Field;
 import java.util.ResourceBundle;
+import java.util.regex.Pattern;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -10,6 +11,7 @@ import com.laud.doodo.annotation.Column;
 import com.laud.doodo.annotation.Table;
 import com.laud.doodo.exception.ExceptionFactory;
 import com.laud.doodo.exception.InvalidValueException;
+import com.laud.doodo.string.StringUtils;
 
 /**
  * @author: Laud
@@ -70,6 +72,14 @@ public abstract class ColumnValidator implements Validator {
 					if (value.length() > length) {
 						throw ExceptionFactory.wrapException("字段长度超过限制！",
 								new InvalidValueException(displayName + hint));
+					}
+					String regex = column.regex();
+					if (!StringUtils.isNullOrEmpty(regex)) {
+						if (!Pattern.matches(regex, value)) {
+							throw ExceptionFactory.wrapException("字段不匹配正则表达式！",
+									new InvalidValueException(displayName
+											+ hint));
+						}
 					}
 				}
 			}

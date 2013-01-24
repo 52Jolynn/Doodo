@@ -22,6 +22,13 @@ public @interface Column {
 	public int length() default 0;
 
 	/**
+	 * 正则表达式
+	 * 
+	 * @return
+	 */
+	public String regex() default "";
+
+	/**
 	 * 名称
 	 * 
 	 * @return

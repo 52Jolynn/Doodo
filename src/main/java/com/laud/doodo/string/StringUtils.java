@@ -45,7 +45,7 @@ public class StringUtils {
 	 * @param value
 	 * @return
 	 */
-	public boolean isNullOrEmpty(String value) {
+	public static boolean isNullOrEmpty(String value) {
 		return value == null || value.length() == 0;
 	}
 
