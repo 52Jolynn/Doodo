@@ -60,4 +60,10 @@ public class ByteUtilTest extends TestCase {
 		i = ByteUtils.byteArrayToInt(bytes);
 		assertEquals(expect, i);
 	}
+
+	public void testByteFloatConvert() {
+		byte[] data = ByteUtils.floatToByte(1.23f);
+		float f = ByteUtils.byte2Float(data);
+		assertEquals(1.23f, f, 0);
+	}
 }
