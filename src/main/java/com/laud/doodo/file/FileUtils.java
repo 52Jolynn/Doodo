@@ -1,6 +1,16 @@
 package com.laud.doodo.file;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.io.Writer;
+import java.nio.ByteBuffer;
+import java.nio.channels.FileChannel;
+import java.nio.charset.Charset;
 
 /**
  * @author: Laud
@@ -9,6 +19,11 @@ import java.io.File;
  * @copyright: www.dreamoriole.com
  */
 public class FileUtils {
+	/**
+	 * 缓冲区大小
+	 */
+	private final static int BUFFER_SIZE = 1024;
+
 	/**
 	 * 取得文件扩展名
 	 * 
@@ -37,7 +52,7 @@ public class FileUtils {
 	 * 
 	 * @param file
 	 */
-	public void deleteDirectory(File file) {
+	public static void deleteDirectory(File file) {
 		if (file.exists()) {
 			if (file.isDirectory()) {
 				File[] files = file.listFiles();
@@ -51,5 +66,172 @@ public class FileUtils {
 			}
 			file.delete();
 		}
+	}
+
+	/**
+	 * 读取本地文件，NIO方式
+	 * 
+	 * @param filePath
+	 *            文件路径
+	 * @return
+	 */
+	public static byte[] readWithNIO(String filePath)
+			throws FileNotFoundException, IOException {
+		if (filePath == null) {
+			return null;
+		}
+		FileInputStream fis = new FileInputStream(new File(filePath));
+		FileChannel fc = fis.getChannel();
+		ByteArrayOutputStream baos = new ByteArrayOutputStream();
+		ByteBuffer buffer = ByteBuffer.allocate(BUFFER_SIZE);
+		byte[] data = new byte[BUFFER_SIZE];
+		while (true) {
+			int count = fc.read(buffer);
+			if (count == -1) {
+				break;
+			}
+			if (count < BUFFER_SIZE) {
+				data = new byte[count];
+			}
+			buffer.flip();
+			buffer.get(data, 0, count);
+			buffer.flip();
+			baos.write(data);
+			buffer.clear();
+		}
+		fc.close();
+		fis.close();
+		return baos.toByteArray();
+	}
+
+	/**
+	 * 写入本地文件，NIO方式
+	 * 
+	 * @param data
+	 *            数据
+	 * @param filePath
+	 *            文件路径
+	 */
+	public static void writeWithNIO(byte[] data, String filePath)
+			throws IOException {
+		FileOutputStream fos = new FileOutputStream(new File(filePath));
+		FileChannel fc = fos.getChannel();
+
+		ByteBuffer buffer = ByteBuffer.allocate(BUFFER_SIZE);
+		int byteCount = data.length;
+		int q = byteCount / BUFFER_SIZE;
+		int mod = byteCount % BUFFER_SIZE;
+		int offset = 0;
+		for (int i = 0; i < q; i++) {
+			offset = i * BUFFER_SIZE;
+			buffer.put(data, offset, BUFFER_SIZE);
+			buffer.flip();
+			fc.write(buffer);
+			buffer.clear();
+			offset += BUFFER_SIZE;
+		}
+		buffer.put(data, offset, mod);
+		buffer.flip();
+		fc.write(buffer);
+		buffer.clear();
+
+		fc.close();
+		fos.close();
+	}
+
+	/**
+	 * 读取本地文件，传统IO
+	 * 
+	 * @param filePath
+	 *            文件路径
+	 * @return
+	 */
+	public static byte[] read(String filePath) throws IOException,
+			FileNotFoundException {
+		if (filePath == null) {
+			return null;
+		}
+		FileInputStream fis = new FileInputStream(new File(filePath));
+		int size = fis.available();
+		ByteArrayOutputStream baos = new ByteArrayOutputStream(size);
+		byte[] data = null;
+		if (size < BUFFER_SIZE) {
+			data = new byte[size];
+		} else {
+			data = new byte[BUFFER_SIZE];
+		}
+		while (true) {
+			int count = fis.read(data);
+			if (count == -1) {
+				break;
+			}
+			baos.write(data);
+		}
+		fis.close();
+		return baos.toByteArray();
+	}
+
+	/**
+	 * 写入本地文件，传统IO
+	 * 
+	 * @param data
+	 *            数据
+	 * @param filePath
+	 *            文件路径
+	 */
+	public static void write(byte[] data, String filePath) throws IOException {
+		FileOutputStream fos = new FileOutputStream(new File(filePath));
+		int byteCount = data.length;
+		int q = byteCount / BUFFER_SIZE;
+		int mod = byteCount % BUFFER_SIZE;
+		int offset = 0;
+		for (int i = 0; i < q; i++) {
+			offset = i * BUFFER_SIZE;
+			fos.write(data, offset, BUFFER_SIZE);
+			offset += BUFFER_SIZE;
+		}
+		fos.write(data, offset, mod);
+		fos.flush();
+		fos.close();
+	}
+
+	/**
+	 * 以指定编码方式，写入本地文件，传统IO
+	 * 
+	 * @param data
+	 *            数据
+	 * @param charsetName
+	 *            编码名称
+	 * @param filePath
+	 *            文件路径
+	 * @throws FileNotFoundException
+	 * @throws IOException
+	 */
+	public static void write(byte[] data, String charsetName, String filePath)
+			throws FileNotFoundException, IOException {
+		String value = new String(data);
+		write(value, charsetName, filePath);
+	}
+
+	/**
+	 * 以指定编码方式，写入本地文件，传统IO
+	 * 
+	 * @param data
+	 *            数据
+	 * @param charsetName
+	 *            编码名称
+	 * @param filePath
+	 *            文件路径
+	 * @throws FileNotFoundException
+	 * @throws IOException
+	 */
+	public static void write(String data, String charsetName, String filePath)
+			throws IOException, FileNotFoundException {
+		Charset charset = Charset.forName(charsetName);
+		FileOutputStream fos = new FileOutputStream(new File(filePath));
+		Writer writer = new OutputStreamWriter(fos, charset);
+		writer.write(data);
+		writer.close();
+		fos.close();
 	}
 }

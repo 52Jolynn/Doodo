@@ -27,4 +27,25 @@ public class FileTest extends TestCase {
 		filename = FileUtils.getFileName(filepath);
 		assertEquals(filename, "abc.txt");
 	}
+
+	public void testReadWrite() throws Exception {
+		byte[] data = FileUtils.read("g:\\test\\a.jpg");
+		FileUtils.write(data, "g:\\test\\aa.jpg");
+		data = FileUtils.read("g:\\test\\t.txt");
+		FileUtils.write(data, "g:\\test\\tt.txt");
+		FileUtils.write(data, "utf-8", "g:\\test\\tutf-8.txt");
+	}
+
+	public void testReadWriteWithNIO() throws Exception {
+		byte[] data = FileUtils.readWithNIO("g:\\test\\a.jpg");
+		FileUtils.writeWithNIO(data, "g:\\test\\aa2.jpg");
+		data = FileUtils.readWithNIO("g:\\test\\t.txt");
+		FileUtils.writeWithNIO(data, "g:\\test\\tt2.txt");
+	}
+
+	public void testWrite() throws Exception {
+		byte[] data = FileUtils.readWithNIO("g:\\test\\t.txt");
+		FileUtils.write(data, "gbk", "g:\\test\\tgbk.txt");
+		FileUtils.write("可我忘了中华人民共和国", "utf-8", "g:\\test\\t2utf-8.txt");
+	}
 }
