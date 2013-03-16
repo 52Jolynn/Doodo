@@ -9,8 +9,11 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.nio.ByteBuffer;
+import java.nio.CharBuffer;
 import java.nio.channels.FileChannel;
+import java.nio.charset.CharacterCodingException;
 import java.nio.charset.Charset;
+import java.nio.charset.CharsetEncoder;
 
 /**
  * @author: Laud
@@ -123,7 +126,6 @@ public class FileUtils {
 		int mod = byteCount % BUFFER_SIZE;
 		int offset = 0;
 		for (int i = 0; i < q; i++) {
-			offset = i * BUFFER_SIZE;
 			buffer.put(data, offset, BUFFER_SIZE);
 			buffer.flip();
 			fc.write(buffer);
@@ -186,7 +188,6 @@ public class FileUtils {
 		int mod = byteCount % BUFFER_SIZE;
 		int offset = 0;
 		for (int i = 0; i < q; i++) {
-			offset = i * BUFFER_SIZE;
 			fos.write(data, offset, BUFFER_SIZE);
 			offset += BUFFER_SIZE;
 		}
@@ -233,5 +234,48 @@ public class FileUtils {
 		writer.write(data);
 		writer.close();
 		fos.close();
+	}
+
+	/**
+	 * 以指定编码方式，写入本地文件，NIO
+	 * 
+	 * @param data
+	 *            数据
+	 * @param charsetName
+	 *            编码名称
+	 * @param filePath
+	 *            文件路径
+	 * @throws FileNotFoundException
+	 * @throws IOException
+	 */
+	public static void writeWithNIO(String data, String charsetName,
+			String filePath) throws CharacterCodingException, IOException {
+		Charset charset = Charset.forName(charsetName);
+		CharsetEncoder encoder = charset.newEncoder();
+		CharBuffer charBuffer = CharBuffer.wrap(data, 0, data.length());
+		ByteBuffer buffer = encoder.encode(charBuffer);
+		FileOutputStream fos = new FileOutputStream(new File(filePath));
+		FileChannel fc = fos.getChannel();
+		fc.write(buffer);
+		fc.close();
+		fos.close();
+	}
+
+	/**
+	 * 以指定编码方式，写入本地文件，NIO
+	 * 
+	 * @param data
+	 *            数据
+	 * @param charsetName
+	 *            编码名称
+	 * @param filePath
+	 *            文件路径
+	 * @throws FileNotFoundException
+	 * @throws IOException
+	 */
+	public static void writeWithNIO(byte[] data, String charsetName,
+			String filePath) throws CharacterCodingException, IOException {
+		String value = new String(data);
+		writeWithNIO(value, charsetName, filePath);
 	}
 }
