@@ -13,6 +13,7 @@ import java.nio.CharBuffer;
 import java.nio.channels.FileChannel;
 import java.nio.charset.CharacterCodingException;
 import java.nio.charset.Charset;
+import java.nio.charset.CharsetDecoder;
 import java.nio.charset.CharsetEncoder;
 
 /**
@@ -26,6 +27,10 @@ public class FileUtils {
 	 * 缓冲区大小
 	 */
 	private final static int BUFFER_SIZE = 1024;
+	/**
+	 * 默认编码类型
+	 */
+	private final static String DEFAULT_CHARSET_NAME = "UTF-8";
 
 	/**
 	 * 取得文件扩展名
@@ -171,6 +176,62 @@ public class FileUtils {
 		}
 		fis.close();
 		return baos.toByteArray();
+	}
+
+	/**
+	 * 以指定编码读入本地文件，以UTF-8编码方式输出，NIO
+	 * 
+	 * @param filePath
+	 *            文件路径
+	 * @param inCharsetName
+	 *            编码名称，读入
+	 * @return
+	 */
+	public static byte[] readWithNIO(String filePath, String inCharsetName)
+			throws FileNotFoundException, IOException {
+		return readWithNIO(filePath, inCharsetName, DEFAULT_CHARSET_NAME);
+	}
+
+	/**
+	 * 以指定编码读入本地文件，以指定编码方式输出，NIO
+	 * 
+	 * @param filePath
+	 *            文件路径
+	 * @param inCharsetName
+	 *            编码名称，读入
+	 * @param outCharsetName
+	 *            编码名称，输出
+	 * @return
+	 */
+	public static byte[] readWithNIO(String filePath, String inCharsetName,
+			String outCharsetName) throws FileNotFoundException, IOException {
+		FileInputStream fis = new FileInputStream(new File(filePath));
+		FileChannel fc = fis.getChannel();
+		ByteBuffer byteBuffer = ByteBuffer.allocate(fis.available());
+		ByteBuffer buffer = ByteBuffer.allocate(BUFFER_SIZE);
+
+		while (true) {
+			int count = fc.read(buffer);
+			if (count == -1) {
+				break;
+			}
+			buffer.flip();
+			byteBuffer.put(buffer);
+			buffer.clear();
+		}
+		fc.close();
+		fis.close();
+		byteBuffer.flip();
+		Charset inCharset = Charset.forName(inCharsetName);
+		Charset outCharset = Charset.forName(outCharsetName);
+		CharsetDecoder decoder = inCharset.newDecoder();
+		CharsetEncoder encoder = outCharset.newEncoder();
+		CharBuffer charBuffer = decoder.decode(byteBuffer);
+		ByteBuffer resultBuffer = encoder.encode(charBuffer);
+		int size = resultBuffer.limit();
+		byte[] data = new byte[size];
+		resultBuffer.get(data, 0, size);
+		return data;
 	}
 
 	/**
