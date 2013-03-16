@@ -9,8 +9,12 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.nio.ByteBuffer;
+import java.nio.CharBuffer;
 import java.nio.channels.FileChannel;
+import java.nio.charset.CharacterCodingException;
 import java.nio.charset.Charset;
+import java.nio.charset.CharsetDecoder;
+import java.nio.charset.CharsetEncoder;
 
 /**
  * @author: Laud
@@ -23,6 +27,10 @@ public class FileUtils {
 	 * 缓冲区大小
 	 */
 	private final static int BUFFER_SIZE = 1024;
+	/**
+	 * 默认编码类型
+	 */
+	private final static String DEFAULT_CHARSET_NAME = "UTF-8";
 
 	/**
 	 * 取得文件扩展名
@@ -123,7 +131,6 @@ public class FileUtils {
 		int mod = byteCount % BUFFER_SIZE;
 		int offset = 0;
 		for (int i = 0; i < q; i++) {
-			offset = i * BUFFER_SIZE;
 			buffer.put(data, offset, BUFFER_SIZE);
 			buffer.flip();
 			fc.write(buffer);
@@ -172,6 +179,62 @@ public class FileUtils {
 	}
 
 	/**
+	 * 以指定编码读入本地文件，以UTF-8编码方式输出，NIO
+	 * 
+	 * @param filePath
+	 *            文件路径
+	 * @param inCharsetName
+	 *            编码名称，读入
+	 * @return
+	 */
+	public static byte[] readWithNIO(String filePath, String inCharsetName)
+			throws FileNotFoundException, IOException {
+		return readWithNIO(filePath, inCharsetName, DEFAULT_CHARSET_NAME);
+	}
+
+	/**
+	 * 以指定编码读入本地文件，以指定编码方式输出，NIO
+	 * 
+	 * @param filePath
+	 *            文件路径
+	 * @param inCharsetName
+	 *            编码名称，读入
+	 * @param outCharsetName
+	 *            编码名称，输出
+	 * @return
+	 */
+	public static byte[] readWithNIO(String filePath, String inCharsetName,
+			String outCharsetName) throws FileNotFoundException, IOException {
+		FileInputStream fis = new FileInputStream(new File(filePath));
+		FileChannel fc = fis.getChannel();
+		ByteBuffer byteBuffer = ByteBuffer.allocate(fis.available());
+		ByteBuffer buffer = ByteBuffer.allocate(BUFFER_SIZE);
+
+		while (true) {
+			int count = fc.read(buffer);
+			if (count == -1) {
+				break;
+			}
+			buffer.flip();
+			byteBuffer.put(buffer);
+			buffer.clear();
+		}
+		fc.close();
+		fis.close();
+		byteBuffer.flip();
+		Charset inCharset = Charset.forName(inCharsetName);
+		Charset outCharset = Charset.forName(outCharsetName);
+		CharsetDecoder decoder = inCharset.newDecoder();
+		CharsetEncoder encoder = outCharset.newEncoder();
+		CharBuffer charBuffer = decoder.decode(byteBuffer);
+		ByteBuffer resultBuffer = encoder.encode(charBuffer);
+		int size = resultBuffer.limit();
+		byte[] data = new byte[size];
+		resultBuffer.get(data, 0, size);
+		return data;
+	}
+
+	/**
 	 * 写入本地文件，传统IO
 	 * 
 	 * @param data
@@ -186,7 +249,6 @@ public class FileUtils {
 		int mod = byteCount % BUFFER_SIZE;
 		int offset = 0;
 		for (int i = 0; i < q; i++) {
-			offset = i * BUFFER_SIZE;
 			fos.write(data, offset, BUFFER_SIZE);
 			offset += BUFFER_SIZE;
 		}
@@ -234,4 +296,48 @@ public class FileUtils {
 		writer.close();
 		fos.close();
 	}
+
+	/**
+	 * 以指定编码方式，写入本地文件，NIO
+	 * 
+	 * @param data
+	 *            数据
+	 * @param charsetName
+	 *            编码名称
+	 * @param filePath
+	 *            文件路径
+	 * @throws FileNotFoundException
+	 * @throws IOException
+	 */
+	public static void writeWithNIO(String data, String charsetName,
+			String filePath) throws CharacterCodingException, IOException {
+		Charset charset = Charset.forName(charsetName);
+		CharsetEncoder encoder = charset.newEncoder();
+		CharBuffer charBuffer = CharBuffer.wrap(data, 0, data.length());
+		ByteBuffer buffer = encoder.encode(charBuffer);
+		FileOutputStream fos = new FileOutputStream(new File(filePath));
+		FileChannel fc = fos.getChannel();
+		fc.write(buffer);
+		fc.close();
+		fos.close();
+	}
+
+	/**
+	 * 以指定编码方式，写入本地文件，NIO
+	 * 
+	 * @param data
+	 *            数据
+	 * @param charsetName
+	 *            编码名称
+	 * @param filePath
+	 *            文件路径
+	 * @throws FileNotFoundException
+	 * @throws IOException
+	 */
+	public static void writeWithNIO(byte[] data, String charsetName,
+			String filePath) throws CharacterCodingException, IOException {
+		String value = new String(data);
+		writeWithNIO(value, charsetName, filePath);
+	}
+
 }
