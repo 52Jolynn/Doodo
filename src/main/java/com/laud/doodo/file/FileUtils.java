@@ -81,6 +81,8 @@ public class FileUtils {
 	 * 
 	 * @param filePath
 	 *            文件路径
+	 * @throws FileNotFoundException
+	 * @throws IOException
 	 * @return
 	 */
 	public static byte[] readWithNIO(String filePath)
@@ -117,6 +119,8 @@ public class FileUtils {
 	 * 
 	 * @param filePath
 	 *            文件路径
+	 * @throws FileNotFoundException
+	 * @throws IOException
 	 * @return
 	 */
 	public static byte[] read(String filePath) throws IOException,
@@ -151,6 +155,8 @@ public class FileUtils {
 	 *            文件路径
 	 * @param inCharsetName
 	 *            编码名称，读入
+	 * @throws FileNotFoundException
+	 * @throws IOException
 	 * @return
 	 */
 	public static byte[] readWithNIO(String filePath, String inCharsetName)
@@ -167,6 +173,8 @@ public class FileUtils {
 	 *            编码名称，读入
 	 * @param outCharsetName
 	 *            编码名称，输出
+	 * @throws FileNotFoundException
+	 * @throws IOException
 	 * @return
 	 */
 	public static byte[] readWithNIO(String filePath, String inCharsetName,
@@ -207,6 +215,7 @@ public class FileUtils {
 	 *            数据
 	 * @param filePath
 	 *            文件路径
+	 * @throws IOException
 	 */
 	public static void write(byte[] data, String filePath) throws IOException {
 		write(data, filePath, false);
@@ -266,11 +275,10 @@ public class FileUtils {
 	 *            编码名称
 	 * @param filePath
 	 *            文件路径
-	 * @throws FileNotFoundException
 	 * @throws IOException
 	 */
 	public static void write(String data, String charsetName, String filePath)
-			throws IOException, FileNotFoundException {
+			throws IOException {
 		Charset charset = Charset.forName(charsetName);
 		FileOutputStream fos = new FileOutputStream(new File(filePath));
 		Writer writer = new OutputStreamWriter(fos, charset);
@@ -286,6 +294,7 @@ public class FileUtils {
 	 *            数据
 	 * @param filePath
 	 *            文件路径
+	 * @throws IOException
 	 */
 	public static void writeWithNIO(byte[] data, String filePath)
 			throws IOException {
@@ -322,7 +331,7 @@ public class FileUtils {
 	 *            编码名称
 	 * @param filePath
 	 *            文件路径
-	 * @throws FileNotFoundException
+	 * @throws CharacterCodingException
 	 * @throws IOException
 	 */
 	public static void writeWithNIO(String data, String charsetName,
@@ -367,7 +376,7 @@ public class FileUtils {
 	 *            编码名称
 	 * @param filePath
 	 *            文件路径
-	 * @throws FileNotFoundException
+	 * @throws CharacterCodingException
 	 * @throws IOException
 	 */
 	public static void writeWithNIO(byte[] data, String charsetName,
