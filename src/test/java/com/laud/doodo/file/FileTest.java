@@ -50,7 +50,10 @@ public class FileTest extends TestCase {
 		byte[] data = FileUtils.readWithNIO("g:\\test\\t.txt");
 		FileUtils.write(data, "gbk", "g:\\test\\tgbk.txt");
 		FileUtils.write("可我忘了中华人民共和国", "utf-8", "g:\\test\\t2utf-8.txt");
+		FileUtils.write("d中中中中中".getBytes(), "g:\\test\\t2utf-8.txt", true);
 		FileUtils.writeWithNIO("我是中华人民共和国".getBytes(), "utf-8",
 				"g:\\test\\t3utf8.txt");
+		FileUtils.writeWithNIO("虽中昌虽时檶城哭丧棒", "utf-8", "g:\\test\\t2utf-8.txt",
+				true);
 	}
 }

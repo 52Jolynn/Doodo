@@ -113,40 +113,6 @@ public class FileUtils {
 	}
 
 	/**
-	 * 写入本地文件，NIO方式
-	 * 
-	 * @param data
-	 *            数据
-	 * @param filePath
-	 *            文件路径
-	 */
-	public static void writeWithNIO(byte[] data, String filePath)
-			throws IOException {
-		FileOutputStream fos = new FileOutputStream(new File(filePath));
-		FileChannel fc = fos.getChannel();
-
-		ByteBuffer buffer = ByteBuffer.allocate(BUFFER_SIZE);
-		int byteCount = data.length;
-		int q = byteCount / BUFFER_SIZE;
-		int mod = byteCount % BUFFER_SIZE;
-		int offset = 0;
-		for (int i = 0; i < q; i++) {
-			buffer.put(data, offset, BUFFER_SIZE);
-			buffer.flip();
-			fc.write(buffer);
-			buffer.clear();
-			offset += BUFFER_SIZE;
-		}
-		buffer.put(data, offset, mod);
-		buffer.flip();
-		fc.write(buffer);
-		buffer.clear();
-
-		fc.close();
-		fos.close();
-	}
-
-	/**
 	 * 读取本地文件，传统IO
 	 * 
 	 * @param filePath
@@ -243,7 +209,23 @@ public class FileUtils {
 	 *            文件路径
 	 */
 	public static void write(byte[] data, String filePath) throws IOException {
-		FileOutputStream fos = new FileOutputStream(new File(filePath));
+		write(data, filePath, false);
+	}
+
+	/**
+	 * 写入本地文件，传统IO
+	 * 
+	 * @param data
+	 *            数据
+	 * @param filePath
+	 *            文件路径
+	 * @param append
+	 *            是否追加
+	 * @throws IOException
+	 */
+	public static void write(byte[] data, String filePath, boolean append)
+			throws IOException {
+		FileOutputStream fos = new FileOutputStream(new File(filePath), append);
 		int byteCount = data.length;
 		int q = byteCount / BUFFER_SIZE;
 		int mod = byteCount % BUFFER_SIZE;
@@ -298,6 +280,40 @@ public class FileUtils {
 	}
 
 	/**
+	 * 写入本地文件，NIO方式
+	 * 
+	 * @param data
+	 *            数据
+	 * @param filePath
+	 *            文件路径
+	 */
+	public static void writeWithNIO(byte[] data, String filePath)
+			throws IOException {
+		FileOutputStream fos = new FileOutputStream(new File(filePath));
+		FileChannel fc = fos.getChannel();
+
+		ByteBuffer buffer = ByteBuffer.allocate(BUFFER_SIZE);
+		int byteCount = data.length;
+		int q = byteCount / BUFFER_SIZE;
+		int mod = byteCount % BUFFER_SIZE;
+		int offset = 0;
+		for (int i = 0; i < q; i++) {
+			buffer.put(data, offset, BUFFER_SIZE);
+			buffer.flip();
+			fc.write(buffer);
+			buffer.clear();
+			offset += BUFFER_SIZE;
+		}
+		buffer.put(data, offset, mod);
+		buffer.flip();
+		fc.write(buffer);
+		buffer.clear();
+
+		fc.close();
+		fos.close();
+	}
+
+	/**
 	 * 以指定编码方式，写入本地文件，NIO
 	 * 
 	 * @param data
@@ -311,11 +327,31 @@ public class FileUtils {
 	 */
 	public static void writeWithNIO(String data, String charsetName,
 			String filePath) throws CharacterCodingException, IOException {
+		writeWithNIO(data, charsetName, filePath, false);
+	}
+
+	/**
+	 * 以指定编码方式，写入本地文件，NIO
+	 * 
+	 * @param data
+	 *            数据
+	 * @param charsetName
+	 *            编码名称
+	 * @param filePath
+	 *            文件路径
+	 * @param append
+	 *            是否追加
+	 * @throws CharacterCodingException
+	 * @throws IOException
+	 */
+	public static void writeWithNIO(String data, String charsetName,
+			String filePath, boolean append) throws CharacterCodingException,
+			IOException {
 		Charset charset = Charset.forName(charsetName);
 		CharsetEncoder encoder = charset.newEncoder();
 		CharBuffer charBuffer = CharBuffer.wrap(data, 0, data.length());
 		ByteBuffer buffer = encoder.encode(charBuffer);
-		FileOutputStream fos = new FileOutputStream(new File(filePath));
+		FileOutputStream fos = new FileOutputStream(new File(filePath), append);
 		FileChannel fc = fos.getChannel();
 		fc.write(buffer);
 		fc.close();
