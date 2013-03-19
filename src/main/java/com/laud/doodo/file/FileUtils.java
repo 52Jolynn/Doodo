@@ -196,6 +196,9 @@ public class FileUtils {
 	 */
 	public static byte[] readWithNIO(String filePath, String inCharsetName,
 			String outCharsetName) throws FileNotFoundException, IOException {
+		if (filePath == null) {
+			return null;
+		}
 		FileInputStream fis = new FileInputStream(new File(filePath));
 		FileChannel fc = fis.getChannel();
 		ByteBuffer byteBuffer = ByteBuffer.allocate(fis.available());
@@ -400,5 +403,32 @@ public class FileUtils {
 			String filePath) throws CharacterCodingException, IOException {
 		String value = new String(data);
 		writeWithNIO(value, charsetName, filePath);
+	}
+
+	/**
+	 * 将指定的输入流写入本地文件，NIO方式
+	 * 
+	 * @param in
+	 * @param filePath
+	 */
+	public static void writeFromInputStream(InputStream in, String filePath)
+			throws IOException {
+		FileOutputStream fos = new FileOutputStream(new File(filePath));
+		FileChannel fc = fos.getChannel();
+		ReadableByteChannel rbc = Channels.newChannel(in);
+		ByteBuffer buffer = ByteBuffer.allocate(BUFFER_SIZE);
+		while (true) {
+			int count = rbc.read(buffer);
+			if (count == -1) {
+				break;
+			}
+			buffer.flip();
+			fc.write(buffer);
+			buffer.clear();
+		}
+
+		rbc.close();
+		fc.close();
+		fos.close();
 	}
 }

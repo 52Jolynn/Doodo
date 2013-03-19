@@ -1,5 +1,8 @@
 package com.laud.doodo.file;
 
+import java.io.File;
+import java.io.FileInputStream;
+
 import junit.framework.TestCase;
 
 /**
@@ -55,5 +58,7 @@ public class FileTest extends TestCase {
 				"g:\\test\\t3utf8.txt");
 		FileUtils.writeWithNIO("虽中昌虽时檶城哭丧棒", "utf-8", "g:\\test\\t2utf-8.txt",
 				true);
+		FileUtils.writeFromInputStream(new FileInputStream(new File(
+				"g:\\test\\t.txt")), "g:\\test\\t333.txt");
 	}
 }
