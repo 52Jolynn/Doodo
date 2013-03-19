@@ -6,11 +6,14 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.nio.ByteBuffer;
 import java.nio.CharBuffer;
+import java.nio.channels.Channels;
 import java.nio.channels.FileChannel;
+import java.nio.channels.ReadableByteChannel;
 import java.nio.charset.CharacterCodingException;
 import java.nio.charset.Charset;
 import java.nio.charset.CharsetDecoder;
@@ -81,8 +84,8 @@ public class FileUtils {
 	 * 
 	 * @param filePath
 	 *            文件路径
-	 * @throws FileNotFoundException
 	 * @throws IOException
+	 * @throws FileNotFoundException
 	 * @return
 	 */
 	public static byte[] readWithNIO(String filePath)
@@ -91,12 +94,28 @@ public class FileUtils {
 			return null;
 		}
 		FileInputStream fis = new FileInputStream(new File(filePath));
-		FileChannel fc = fis.getChannel();
-		ByteArrayOutputStream baos = new ByteArrayOutputStream();
+		byte[] data = readFromInputStream(fis);
+		fis.close();
+		return data;
+	}
+
+	/**
+	 * 从输入流中读取数据，NIO方式
+	 * 
+	 * @param in
+	 * @return
+	 * @throws IOException
+	 */
+	public static byte[] readFromInputStream(InputStream in) throws IOException {
+		if (in == null) {
+			return null;
+		}
+		ReadableByteChannel rbc = Channels.newChannel(in);
 		ByteBuffer buffer = ByteBuffer.allocate(BUFFER_SIZE);
 		byte[] data = new byte[BUFFER_SIZE];
+		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		while (true) {
-			int count = fc.read(buffer);
+			int count = rbc.read(buffer);
 			if (count == -1) {
 				break;
 			}
@@ -105,12 +124,10 @@ public class FileUtils {
 			}
 			buffer.flip();
 			buffer.get(data, 0, count);
-			buffer.flip();
 			baos.write(data);
 			buffer.clear();
 		}
-		fc.close();
-		fis.close();
+		rbc.close();
 		return baos.toByteArray();
 	}
 
