@@ -97,8 +97,19 @@ public class FontUtils {
 	 * @param value
 	 * @return
 	 */
-	public static int getStringWidthQuicklyWithFont(Font font, String value) {
-		int[] result = getEachCharWidth(font, value);
+	public static int getStringWidthQuickly(Font font, String value) {
+		return getStringWidthQuickly(getFontMetrics(font), value);
+	}
+
+	/**
+	 * 快速计算字符串宽度
+	 * 
+	 * @param fm
+	 * @param value
+	 * @return
+	 */
+	public static int getStringWidthQuickly(FontMetrics fm, String value) {
+		int[] result = getEachCharWidth(fm, value);
 		if (result == null) {
 			return 0;
 		}
@@ -110,7 +121,7 @@ public class FontUtils {
 	}
 
 	/**
-	 * 计算每个字符串的宽度，支持中英混合
+	 * 计算每个字符的宽度，支持中英混合
 	 * 
 	 * @param font
 	 * @param value
@@ -120,32 +131,47 @@ public class FontUtils {
 		if (font == null || value == null) {
 			return null;
 		}
-		int length = value.length();
-		int[] result = new int[length];
-		Graphics2D g2 = (Graphics2D) new BufferedImage(1, 1,
-				BufferedImage.TYPE_INT_ARGB).getGraphics();
-		g2.setFont(font);
-		FontMetrics fm = g2.getFontMetrics();
-		for (int i = 0; i < length; i++) {
-			char ch = value.charAt(i);
-			result[i] = fm.charWidth(ch);
-		}
-		return result;
+		FontMetrics fm = getFontMetrics(font);
+		return getEachCharWidth(fm, value);
 	}
 
 	/**
-	 * 计算每个字符串的宽度，支持中英混合，适用于等宽字体
+	 * 计算每个字符的宽度，支持中英混合
 	 * 
-	 * @param font
+	 * @param fm
 	 * @param value
 	 * @return
 	 */
-	public static int[] getEachCharWidth2(Font font, String value) {
-		if (font == null || value == null) {
+	public static int[] getEachCharWidth(FontMetrics fm, String value) {
+		if (fm == null || value == null) {
 			return null;
 		}
-		int cnCharWidth = getCharWidthWithFont(font, '米');
-		int enCharWidth = getCharWidthWithFont(font, 'M');
+		if (isMonospaced(fm)) {
+			return getEachMonoCharWidth(fm, value);
+		} else {
+			int length = value.length();
+			int[] result = new int[length];
+			for (int i = 0; i < length; i++) {
+				char ch = value.charAt(i);
+				result[i] = fm.charWidth(ch);
+			}
+			return result;
+		}
+	}
+
+	/**
+	 * 计算每个字符的宽度，支持中英混合，适用于等宽字体
+	 * 
+	 * @param fm
+	 * @param value
+	 * @return
+	 */
+	private static int[] getEachMonoCharWidth(FontMetrics fm, String value) {
+		if (fm == null || value == null) {
+			return null;
+		}
+		int cnCharWidth = fm.charWidth('米');
+		int enCharWidth = fm.charWidth('M');
 		int length = value.length();
 		int[] result = new int[length];
 		int oneByteCharCodePoint = 0x7F;
@@ -167,6 +193,18 @@ public class FontUtils {
 	 * @return
 	 */
 	public static boolean isMonospacedFont(Font font) {
+		FontMetrics fm = getFontMetrics(font);
+		return isMonospaced(fm);
+	}
+
+	/**
+	 * 判断是否等宽字体
+	 * 
+	 * @param fm
+	 * @return
+	 */
+	public static boolean isMonospaced(FontMetrics fm) {
+		Font font = fm.getFont();
 		String mono = "Monospaced";
 		String family = "family";
 		Map<TextAttribute, ?> attributes = font.getAttributes();
@@ -182,7 +220,6 @@ public class FontUtils {
 			}
 		}
 
-		FontMetrics fm = getFontMetrics(font);
 		int en1 = fm.charWidth('l');
 		int en2 = fm.charWidth('m');
 		if (en1 == en2) {
