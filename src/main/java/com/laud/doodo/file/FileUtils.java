@@ -19,6 +19,9 @@ import java.nio.charset.Charset;
 import java.nio.charset.CharsetDecoder;
 import java.nio.charset.CharsetEncoder;
 
+import com.laud.doodo.common.SystemUtils;
+import com.laud.doodo.common.SystemUtils.OpeatingSystemType;
+
 /**
  * @author: Laud
  * @email: htd0324@gmail.com
@@ -56,6 +59,25 @@ public class FileUtils {
 	public static String getFileName(String filepath) {
 		File file = new File(filepath);
 		return file.getName();
+	}
+
+	/**
+	 * 获取classpath文件绝对路径
+	 * 
+	 * @param fileName
+	 * @return
+	 */
+	public static String getFileAbsolutePathInClasspath(String fileName) {
+		OpeatingSystemType os = SystemUtils.OPERATING_SYSTEM_TYPE;
+		String filePath = ClassLoader.getSystemResource(fileName).getPath();
+		switch (os) {
+		case WINDOWS:
+			return filePath.substring(1);
+		case LINUX:
+		default:
+			break;
+		}
+		return filePath;
 	}
 
 	/**
