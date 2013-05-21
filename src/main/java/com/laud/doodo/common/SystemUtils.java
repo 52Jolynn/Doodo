@@ -10,7 +10,7 @@ public class SystemUtils {
 	/**
 	 * 操作系统类型
 	 */
-	public final static OpeatingSystemType OPERATING_SYSTEM_TYPE = getOperatingSystem();
+	public final static OperatingSystemType OPERATING_SYSTEM_TYPE = getOperatingSystem();
 
 	/**
 	 * 操作系统类别
@@ -21,12 +21,12 @@ public class SystemUtils {
 	 * @copyright: www.armisi.com.cn
 	 * 
 	 */
-	public enum OpeatingSystemType implements EnumValue<Integer> {
+	public enum OperatingSystemType implements EnumValue<Integer> {
 		UNKNOW(-1), WINDOWS(0), LINUX(1);
 
 		private int value;
 
-		private OpeatingSystemType(int value) {
+		private OperatingSystemType(int value) {
 			this.value = value;
 		}
 
@@ -41,13 +41,13 @@ public class SystemUtils {
 	 * 
 	 * @return
 	 */
-	public final static OpeatingSystemType getOperatingSystem() {
+	public final static OperatingSystemType getOperatingSystem() {
 		String osName = System.getProperty("os.name").toLowerCase();
 		if (osName.indexOf("win") != -1) {
-			return OpeatingSystemType.WINDOWS;
+			return OperatingSystemType.WINDOWS;
 		} else if (osName.indexOf("linux") != -1) {
-			return OpeatingSystemType.LINUX;
+			return OperatingSystemType.LINUX;
 		}
-		return OpeatingSystemType.UNKNOW;
+		return OperatingSystemType.UNKNOW;
 	}
 }

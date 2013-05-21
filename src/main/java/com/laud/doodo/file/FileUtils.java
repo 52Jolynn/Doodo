@@ -20,7 +20,7 @@ import java.nio.charset.CharsetDecoder;
 import java.nio.charset.CharsetEncoder;
 
 import com.laud.doodo.common.SystemUtils;
-import com.laud.doodo.common.SystemUtils.OpeatingSystemType;
+import com.laud.doodo.common.SystemUtils.OperatingSystemType;
 
 /**
  * @author: Laud
@@ -68,7 +68,7 @@ public class FileUtils {
 	 * @return
 	 */
 	public static String getFileAbsolutePathInClasspath(String fileName) {
-		OpeatingSystemType os = SystemUtils.OPERATING_SYSTEM_TYPE;
+		OperatingSystemType os = SystemUtils.OPERATING_SYSTEM_TYPE;
 		String filePath = ClassLoader.getSystemResource(fileName).getPath();
 		switch (os) {
 		case WINDOWS:
