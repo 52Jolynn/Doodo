@@ -122,7 +122,7 @@ public class DateUtils {
 	 * @param arg1
 	 * @return 返回大减小的相差天数
 	 */
-	public long differHowManyDays(Date arg0, Date arg1) {
+	public static long differHowManyDays(Date arg0, Date arg1) {
 		long d1 = arg0.getTime();
 		long d2 = arg1.getTime();
 
@@ -135,7 +135,7 @@ public class DateUtils {
 	 * @param date
 	 * @return
 	 */
-	public Date getStartOfTheDay(Date date) {
+	public static Date getStartOfTheDay(Date date) {
 		String value = date2String(date, "yyyy-MM-dd 00:00:00");
 		return string2Date(value);
 	}
@@ -146,7 +146,7 @@ public class DateUtils {
 	 * @param date
 	 * @return
 	 */
-	public Date getEndOfTheDay(Date date) {
+	public static Date getEndOfTheDay(Date date) {
 		String value = date2String(date, "yyyy-MM-dd 23:59:59");
 		return string2Date(value);
 	}
