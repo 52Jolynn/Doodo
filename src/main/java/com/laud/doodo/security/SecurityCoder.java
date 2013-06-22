@@ -21,6 +21,8 @@ import org.apache.commons.codec.binary.Base64;
 public final class SecurityCoder {
 	private final static String MD5 = "MD5";
 	private final static String SHA = "SHA";
+	private static final char[] HEX_DIGITS = { '0', '1', '2', '3', '4', '5',
+			'6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f' };
 
 	/**
 	 * MAC算法可选以下多种算法
@@ -87,10 +89,19 @@ public final class SecurityCoder {
 	 * @param data
 	 * @return
 	 */
-	public static byte[] md5(byte[] data) throws NoSuchAlgorithmException {
+	public static String md5(byte[] data) throws NoSuchAlgorithmException {
 		MessageDigest digest = MessageDigest.getInstance(MD5);
 		digest.update(data);
-		return digest.digest();
+		byte[] bytes = digest.digest();
+		int length = bytes.length;
+		StringBuffer buffer = new StringBuffer(length * 2);
+
+		// 把密文转换成十六进制的字符串形式
+		for (int j = 0; j < length; j++) {
+			buffer.append(HEX_DIGITS[(bytes[j] >> 4) & 0x0f]);
+			buffer.append(HEX_DIGITS[bytes[j] & 0x0f]);
+		}
+		return buffer.toString();
 	}
 
 	/**
