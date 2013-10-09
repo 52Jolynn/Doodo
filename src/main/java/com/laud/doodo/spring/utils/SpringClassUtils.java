@@ -46,7 +46,6 @@ import java.util.Set;
  * @see TypeUtils
  * @see SpringReflectionUtils
  */
-@SuppressWarnings("unchecked")
 public abstract class SpringClassUtils {
 
 	/** Suffix for array class names: "[]" */
