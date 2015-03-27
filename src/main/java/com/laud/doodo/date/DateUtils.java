@@ -6,6 +6,9 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.TimeZone;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * @author: Laud
  * @email: htd0324@gmail.com
@@ -13,6 +16,8 @@ import java.util.TimeZone;
  * @copyright: www.dreamoriole.com
  */
 public class DateUtils {
+	private final static Logger logger = LoggerFactory
+			.getLogger(DateUtils.class);
 	// 默认时间格式
 	public static final String DEFAULT_DATE_PATTERN = "yyyy-MM-dd HH:mm:ss";
 
@@ -25,13 +30,12 @@ public class DateUtils {
 	 */
 	public static Date string2Date(String date, String pattern) {
 		SimpleDateFormat format = new SimpleDateFormat(pattern);
-		Date d = null;
 		try {
-			d = format.parse(date);
+			return format.parse(date);
 		} catch (ParseException e) {
-			e.printStackTrace();
+			logger.error("invalid date value: " + date, e);
 		}
-		return d;
+		return null;
 	}
 
 	/**
